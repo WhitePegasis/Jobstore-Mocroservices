@@ -2,16 +2,14 @@ package com.sourav.jobms.service;
 
 import java.util.List;
 
-import com.sourav.jobms.dto.JobWithCompanyDTO;
+import com.sourav.jobms.dto.JobDTO;
 import com.sourav.jobms.model.Job;
 
 public interface JobService {
-	
-    List<JobWithCompanyDTO> findAll();
-    
+    List<JobDTO> findAll();
     void createJob(Job job);
 
-    Job getJobById(Long id);
+    JobDTO getJobById(Long id);
 
     boolean deleteJobById(Long id);
 
