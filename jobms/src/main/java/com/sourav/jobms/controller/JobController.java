@@ -2,7 +2,6 @@ package com.sourav.jobms.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,23 +13,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sourav.jobms.dto.JobWithCompanyDTO;
 import com.sourav.jobms.model.Job;
 import com.sourav.jobms.service.JobService;
+
 
 @RestController
 @RequestMapping("/jobs")
 public class JobController {
-	
-	@Autowired
     private JobService jobService;
 
-//Uncomment if you don't want to use @Autowired
-//    public JobController(JobService jobService) {
-//        this.jobService = jobService;
-//    }
+    public JobController(JobService jobService) {
+        this.jobService = jobService;
+    }
 
     @GetMapping
-    public ResponseEntity<List<Job>> findAll(){
+    public ResponseEntity<List<JobWithCompanyDTO>> findAll(){
         return ResponseEntity.ok(jobService.findAll());
     }
 

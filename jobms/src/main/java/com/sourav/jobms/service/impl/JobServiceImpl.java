@@ -1,10 +1,14 @@
 package com.sourav.jobms.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import com.sourav.jobms.dto.JobWithCompanyDTO;
+import com.sourav.jobms.external.Company;
 import com.sourav.jobms.model.Job;
 import com.sourav.jobms.repository.JobRepository;
 import com.sourav.jobms.service.JobService;
@@ -19,8 +23,26 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Job> findAll() {
-        return jobRepository.findAll();
+    public List<JobWithCompanyDTO> findAll() {
+        List<Job> jobs = jobRepository.findAll();
+        List<JobWithCompanyDTO> jobWithCompanyDTOs = new ArrayList<>();
+        
+        RestTemplate restTemplate = new RestTemplate();
+
+        for (Job job : jobs) {
+            JobWithCompanyDTO jobWithCompanyDTO = new JobWithCompanyDTO();
+            jobWithCompanyDTO.setJob(job);
+
+            Company company = restTemplate.getForObject(
+                    "http://localhost:8081/companies/" + job.getCompanyId(),
+                    Company.class);
+            
+            jobWithCompanyDTO.setCompany(company);
+
+            jobWithCompanyDTOs.add(jobWithCompanyDTO);
+        }
+
+        return jobWithCompanyDTOs;
     }
 
     @Override
@@ -42,7 +64,6 @@ public class JobServiceImpl implements JobService {
             return false;
         }
     }
-
     @Override
     public boolean updateJob(Long id, Job updatedJob) {
         Optional<Job> jobOptional = jobRepository.findById(id);

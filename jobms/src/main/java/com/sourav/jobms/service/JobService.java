@@ -2,11 +2,12 @@ package com.sourav.jobms.service;
 
 import java.util.List;
 
+import com.sourav.jobms.dto.JobWithCompanyDTO;
 import com.sourav.jobms.model.Job;
 
 public interface JobService {
 	
-    List<Job> findAll();
+    List<JobWithCompanyDTO> findAll();
     
     void createJob(Job job);
 
