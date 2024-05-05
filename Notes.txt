@@ -1,0 +1,6 @@
+1. ***Run Zipkin***
+
+https://zipkin.io/pages/quickstart.html
+
+[ I prefer docker way :) ]
+docker run -d -p 9411:9411 openzipkin/zipkin
