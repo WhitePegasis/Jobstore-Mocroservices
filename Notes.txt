@@ -4,3 +4,15 @@ https://zipkin.io/pages/quickstart.html
 
 [ I prefer docker way :) ]
 docker run -d -p 9411:9411 openzipkin/zipkin
+
+
+2. ***Run Rabbitmq***
+
+https://www.rabbitmq.com/docs/download
+
+[ I prefer docker way :) ]
+docker run -d --name rabbitmq --network jobstore-network -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+
+3. ***Download jmeter to test rate-limiter fallback mechanism***
+
+https://jmeter.apache.org/download_jmeter.cgi

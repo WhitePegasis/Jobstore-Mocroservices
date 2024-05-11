@@ -5,16 +5,22 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.sourav.companyms.clients.ReviewClient;
+import com.sourav.companyms.dto.ReviewMessage;
 import com.sourav.companyms.model.Company;
 import com.sourav.companyms.repository.CompanyRepository;
 import com.sourav.companyms.service.CompanyService;
 
+import jakarta.ws.rs.NotFoundException;
+
 @Service
 public class CompanyServiceImpl implements CompanyService {
     private CompanyRepository companyRepository;
+    private ReviewClient reviewClient;
 
-    public CompanyServiceImpl(CompanyRepository companyRepository) {
+    public CompanyServiceImpl(CompanyRepository companyRepository, ReviewClient reviewClient) {
         this.companyRepository = companyRepository;
+        this.reviewClient=reviewClient;
     }
 
     @Override
@@ -55,5 +61,17 @@ public class CompanyServiceImpl implements CompanyService {
     public Company getCompanyById(Long id) {
         return companyRepository.findById(id).orElse(null);
     }
+
+	@Override
+	public void updateCompanyRating(ReviewMessage reviewMessage) {
+		System.out.println("Recieved rating from RABBITMQ: " +reviewMessage.getDescription());
+		
+		Company company = companyRepository.findById(reviewMessage.getCompanyId())
+				.orElseThrow(()->new NotFoundException("Company not found " + reviewMessage.getCompanyId()));
+		
+		double averageRating = reviewClient.getAverageRatingForCompany(reviewMessage.getCompanyId());
+		company.setRating(averageRating);
+		companyRepository.save(company);
+	}
 
 }
